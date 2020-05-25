@@ -27,7 +27,7 @@ const Navbar = ({ classes, router, pageProps: { auth } }) => {
 
     </Typography>
 
-    {!user._id ? (
+    {user._id ? (
           // Auth Navigation
           <div>
             <Button>

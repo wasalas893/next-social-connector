@@ -105,7 +105,7 @@ var Navbar = function Navbar(_ref) {
     className: classes.toolbarTitle
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_7__["default"], {
     href: "/"
-  }, "NextConnect")), !user._id ?
+  }, "NextConnect")), user._id ?
   /*#__PURE__*/
   // Auth Navigation
   react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_4___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_7__["default"], {
