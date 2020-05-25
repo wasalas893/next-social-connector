@@ -255,7 +255,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_icons_VerifiedUserTwoTone__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_VerifiedUserTwoTone__WEBPACK_IMPORTED_MODULE_16__);
 /* harmony import */ var _material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @material-ui/core/styles/withStyles */ "@material-ui/core/styles/withStyles");
 /* harmony import */ var _material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_17__);
-/* harmony import */ var _lib_auth__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/auth */ "./lib/auth.js");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! next/link */ "next/link");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var _lib_auth__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/auth */ "./lib/auth.js");
 
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -282,6 +284,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 
 
@@ -300,6 +303,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
+
+
+function Transition(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Slide__WEBPACK_IMPORTED_MODULE_14___default.a, _extends({
+    direction: "up"
+  }, props));
+}
 
 var Signup = /*#__PURE__*/function (_React$Component) {
   _inherits(Signup, _React$Component);
@@ -318,9 +329,20 @@ var Signup = /*#__PURE__*/function (_React$Component) {
     _this = _super.call.apply(_super, [this].concat(args));
 
     _defineProperty(_assertThisInitialized(_this), "state", {
-      name: '',
-      email: '',
-      password: ''
+      name: "",
+      email: "",
+      password: "",
+      error: "",
+      createdUser: "",
+      openError: false,
+      openSuccess: false,
+      isLoading: false
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleClose", function () {
+      return _this.setState({
+        openError: false
+      });
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleChange", function (event) {
@@ -338,7 +360,30 @@ var Signup = /*#__PURE__*/function (_React$Component) {
         email: email,
         password: password
       };
-      Object(_lib_auth__WEBPACK_IMPORTED_MODULE_18__["signupUser"])(user);
+
+      _this.setState({
+        isLoading: true,
+        error: ""
+      });
+
+      Object(_lib_auth__WEBPACK_IMPORTED_MODULE_19__["signupUser"])(user).then(function (createdUser) {
+        _this.setState({
+          createdUser: createdUser,
+          error: "",
+          openSuccess: true,
+          isLoading: false
+        });
+      }).catch(_this.showError);
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "showError", function (err) {
+      var error = err.response && err.response.data || err.message;
+
+      _this.setState({
+        error: error,
+        openError: true,
+        isLoading: false
+      });
     });
 
     return _this;
@@ -348,6 +393,12 @@ var Signup = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       var classes = this.props.classes;
+      var _this$state2 = this.state,
+          error = _this$state2.error,
+          openError = _this$state2.openError,
+          openSuccess = _this$state2.openSuccess,
+          createdUser = _this$state2.createdUser,
+          isLoading = _this$state2.isLoading;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: classes.root
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_4___default.a, {
@@ -357,7 +408,7 @@ var Signup = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Gavel__WEBPACK_IMPORTED_MODULE_15___default.a, null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_1___default.a, {
         variant: "h5",
         component: "h1"
-      }, "Sign Up"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      }, "Sign up"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
         onSubmit: this.handleSubmit,
         className: classes.form
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_FormControl__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -395,8 +446,33 @@ var Signup = /*#__PURE__*/function (_React$Component) {
         fullWidth: true,
         variant: "contained",
         color: "primary",
+        disabled: isLoading,
         className: classes.submit
-      }, "Sign Up"))));
+      }, isLoading ? "Signing up..." : "Sign up")), error && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_8___default.a, {
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right"
+        },
+        open: openError,
+        onClose: this.handleClose,
+        autoHideDuration: 6000,
+        message: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: classes.snack
+        }, error)
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Dialog__WEBPACK_IMPORTED_MODULE_9___default.a, {
+        open: openSuccess,
+        disableBackdropClick: true,
+        TransitionComponent: Transition
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_DialogTitle__WEBPACK_IMPORTED_MODULE_13___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_VerifiedUserTwoTone__WEBPACK_IMPORTED_MODULE_16___default.a, {
+        className: classes.icon
+      }), "New Account"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_DialogContent__WEBPACK_IMPORTED_MODULE_11___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_DialogContentText__WEBPACK_IMPORTED_MODULE_12___default.a, null, "User ", createdUser, " successfully created!")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_DialogActions__WEBPACK_IMPORTED_MODULE_10___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_7___default.a, {
+        color: "primary",
+        variant: "contained"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_18___default.a, {
+        href: "/signin"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        className: classes.signinLink
+      }, "Sign in"))))));
     }
   }]);
 
@@ -670,6 +746,17 @@ module.exports = require("@material-ui/icons/VerifiedUserTwoTone");
 /***/ (function(module, exports) {
 
 module.exports = require("axios");
+
+/***/ }),
+
+/***/ "next/link":
+/*!****************************!*\
+  !*** external "next/link" ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("next/link");
 
 /***/ }),
 
