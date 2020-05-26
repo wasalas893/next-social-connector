@@ -111,7 +111,7 @@ var Navbar = function Navbar(_ref) {
   /*#__PURE__*/
   // Auth Navigation
   react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_4___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_8__["default"], {
-    href: "/profile"
+    href: "/profile/".concat(user._id)
   }, "Profile")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_4___default.a, {
     onClick: _lib_auth__WEBPACK_IMPORTED_MODULE_7__["signoutUser"],
     variant: "outlined"
@@ -32527,6 +32527,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+ // import withNProgress from 'next-nprogress';
+// import NProgressStyles from 'next-nprogress/styles';
 
 
 
@@ -32575,7 +32577,9 @@ var MyApp = /*#__PURE__*/function (_App) {
   }]);
 
   return MyApp;
-}(next_app__WEBPACK_IMPORTED_MODULE_1___default.a);
+}(next_app__WEBPACK_IMPORTED_MODULE_1___default.a); // const msDelay=200;
+// const configOptios={ trickleSpeed:50};
+
 
 /* harmony default export */ __webpack_exports__["default"] = (MyApp);
     (function (Component, route) {

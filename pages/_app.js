@@ -4,9 +4,15 @@ import Head from "next/head";
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import JssProvider from 'react-jss/lib/JssProvider';
+// import withNProgress from 'next-nprogress';
+// import NProgressStyles from 'next-nprogress/styles';
+
+
 
 import Navbar from "../components/Navbar";
 import getPageContext from "../lib/getPageContext";
+
+
 
 class MyApp extends App {
   constructor(props) {
@@ -49,9 +55,12 @@ class MyApp extends App {
             <Component pageContext={this.pageContext} {...pageProps} />
           </MuiThemeProvider>
         </JssProvider>
+       
       </Container>
     );
   }
 }
+// const msDelay=200;
+// const configOptios={ trickleSpeed:50};
 
 export default MyApp;
