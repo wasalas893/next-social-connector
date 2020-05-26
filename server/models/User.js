@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
       required: "Avatar image is required",
-      default: "/static/images/sunnada.jpg"
+      default: "/static/images/profile-image.jpg"
     },
     about: {
       type: String,

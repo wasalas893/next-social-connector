@@ -93,16 +93,53 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
+/***/ "./components/profile/FollowUser.js":
+/*!******************************************!*\
+  !*** ./components/profile/FollowUser.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _material_ui_core_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @material-ui/core/Button */ "@material-ui/core/Button");
+/* harmony import */ var _material_ui_core_Button__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _lib_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../lib/api */ "./lib/api.js");
+
+
+
+
+var FollowUser = function FollowUser(_ref) {
+  var isFollowing = _ref.isFollowing,
+      toggleFollow = _ref.toggleFollow;
+  var request = isFollowing ? _lib_api__WEBPACK_IMPORTED_MODULE_2__["unfollowUser"] : _lib_api__WEBPACK_IMPORTED_MODULE_2__["followUser"];
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_1___default.a, {
+    variant: "contained",
+    color: isFollowing ? "secondary" : "primary",
+    onClick: function onClick() {
+      return toggleFollow(request);
+    }
+  }, isFollowing ? "Unfollow" : "Follow");
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (FollowUser);
+
+/***/ }),
+
 /***/ "./lib/api.js":
 /*!********************!*\
   !*** ./lib/api.js ***!
   \********************/
-/*! exports provided: getUser */
+/*! exports provided: getUser, followUser, unfollowUser */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUser", function() { return getUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "followUser", function() { return followUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unfollowUser", function() { return unfollowUser; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "@babel/runtime/regenerator");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "axios");
@@ -140,6 +177,66 @@ var getUser = /*#__PURE__*/function () {
 
   return function getUser(_x) {
     return _ref.apply(this, arguments);
+  };
+}();
+var followUser = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(followId) {
+    var _yield$axios$put, data;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.put('/api/users/follow', {
+              followId: followId
+            });
+
+          case 2:
+            _yield$axios$put = _context2.sent;
+            data = _yield$axios$put.data;
+            return _context2.abrupt("return", data);
+
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function followUser(_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+var unfollowUser = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(followId) {
+    var _yield$axios$put2, data;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.put('/api/users/unfollow', {
+              followId: followId
+            });
+
+          case 2:
+            _yield$axios$put2 = _context3.sent;
+            data = _yield$axios$put2.data;
+            return _context3.abrupt("return", data);
+
+          case 5:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+
+  return function unfollowUser(_x3) {
+    return _ref3.apply(this, arguments);
   };
 }();
 
@@ -364,6 +461,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_api__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/api */ "./lib/api.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! next/link */ "next/link");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var _components_profile_FollowUser__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../components/profile/FollowUser */ "./components/profile/FollowUser.js");
 
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -407,6 +505,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
 var Profile = /*#__PURE__*/function (_React$Component) {
   _inherits(Profile, _React$Component);
 
@@ -426,7 +525,24 @@ var Profile = /*#__PURE__*/function (_React$Component) {
     _defineProperty(_assertThisInitialized(_this), "state", {
       user: null,
       isAuth: false,
+      isFollowing: false,
       isLoading: true
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "checkFollow", function (auth, user) {
+      return user.followers.findIndex(function (follower) {
+        return follower._id == auth.user._id;
+      }) > -1;
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "toggleFollow", function (sendRequest) {
+      var userId = _this.props.userId;
+      var isFollowing = _this.state.isFollowing;
+      sendRequest(userId).then(function () {
+        _this.setState({
+          isFollowing: !isFollowing
+        });
+      });
     });
 
     return _this;
@@ -442,9 +558,12 @@ var Profile = /*#__PURE__*/function (_React$Component) {
           auth = _this$props.auth;
       var isAuth = auth.user._id === userId;
       Object(_lib_api__WEBPACK_IMPORTED_MODULE_15__["getUser"])(userId).then(function (user) {
+        var isFollowing = _this2.checkFollow(auth, user);
+
         _this2.setState({
           user: user,
           isAuth: isAuth,
+          isFollowing: isFollowing,
           isLoading: false
         });
       });
@@ -456,7 +575,8 @@ var Profile = /*#__PURE__*/function (_React$Component) {
       var _this$state = this.state,
           isLoading = _this$state.isLoading,
           user = _this$state.user,
-          isAuth = _this$state.isAuth;
+          isAuth = _this$state.isAuth,
+          isFollowing = _this$state.isFollowing;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_1___default.a, {
         className: classes.root,
         elevation: 4
@@ -484,7 +604,10 @@ var Profile = /*#__PURE__*/function (_React$Component) {
         href: "/edit-profile"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_8___default.a, {
         color: "primary"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Edit__WEBPACK_IMPORTED_MODULE_12___default.a, null)))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Follow")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Divider__WEBPACK_IMPORTED_MODULE_11___default.a, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_ListItem__WEBPACK_IMPORTED_MODULE_3___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_ListItemText__WEBPACK_IMPORTED_MODULE_6___default.a, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Edit__WEBPACK_IMPORTED_MODULE_12___default.a, null)))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_profile_FollowUser__WEBPACK_IMPORTED_MODULE_17__["default"], {
+        isFollowing: isFollowing,
+        toggleFollow: this.toggleFollow
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Divider__WEBPACK_IMPORTED_MODULE_11___default.a, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_ListItem__WEBPACK_IMPORTED_MODULE_3___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_ListItemText__WEBPACK_IMPORTED_MODULE_6___default.a, {
         primary: user.name,
         secondary: "Joined:".concat(user.createdAt)
       }))));
@@ -559,6 +682,17 @@ module.exports = require("@babel/runtime/regenerator");
 /***/ (function(module, exports) {
 
 module.exports = require("@material-ui/core/Avatar");
+
+/***/ }),
+
+/***/ "@material-ui/core/Button":
+/*!*******************************************!*\
+  !*** external "@material-ui/core/Button" ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("@material-ui/core/Button");
 
 /***/ }),
 
