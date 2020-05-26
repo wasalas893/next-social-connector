@@ -18,6 +18,7 @@ import { getUser } from '../lib/api';
 import Link from 'next/link';
 
 import FollowUser from '../components/profile/FollowUser';
+import DeleteUser from '../components/profile/DeleteUser';
 
 class Profile extends React.Component {
   state = {
@@ -94,10 +95,13 @@ class Profile extends React.Component {
               {isAuth ?(
                 <ListItemSecondaryAction>
                   <Link href="/edit-profile">
+                  <a>
                     <IconButton color="primary">
                       <Edit/>
                     </IconButton>
+                    </a>
                   </Link>
+                  <DeleteUser user={user}/>
                 </ListItemSecondaryAction>
               ):(
                 <FollowUser
@@ -112,7 +116,7 @@ class Profile extends React.Component {
             <Divider/>
             <ListItem>
               <ListItemText 
-                primary={user.name}
+               
                 secondary={`Joined:${user.createdAt}`}
               />
             </ListItem>
