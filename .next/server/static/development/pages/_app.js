@@ -166,7 +166,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_icons_ShareOutlined__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_ShareOutlined__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/core/styles/withStyles */ "@material-ui/core/styles/withStyles");
 /* harmony import */ var _material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _ActiveLink__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ActiveLink */ "./components/ActiveLink.js");
+/* harmony import */ var _lib_auth__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/auth */ "./lib/auth.js");
+/* harmony import */ var _ActiveLink__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ActiveLink */ "./components/ActiveLink.js");
+
 
 
 
@@ -188,7 +190,7 @@ var Navbar = function Navbar(_ref) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_AppBar__WEBPACK_IMPORTED_MODULE_1___default.a, {
     className: classes.appBar,
     position: router.pathname === "/" ? "fixed" : "static"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Toolbar__WEBPACK_IMPORTED_MODULE_2___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Toolbar__WEBPACK_IMPORTED_MODULE_2___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_8__["default"], {
     href: "/"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_ShareOutlined__WEBPACK_IMPORTED_MODULE_5___default.a, {
     className: classes.icon
@@ -196,21 +198,22 @@ var Navbar = function Navbar(_ref) {
     variant: "h5",
     component: "h1",
     className: classes.toolbarTitle
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_8__["default"], {
     href: "/"
   }, "NextConnect")), user._id ?
   /*#__PURE__*/
   // Auth Navigation
-  react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_4___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_4___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_8__["default"], {
     href: "/profile"
   }, "Profile")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_4___default.a, {
+    onClick: _lib_auth__WEBPACK_IMPORTED_MODULE_7__["signoutUser"],
     variant: "outlined"
   }, "Sign out")) :
   /*#__PURE__*/
   // UnAuth Navigation
-  react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_4___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_4___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_8__["default"], {
     href: "/signin"
-  }, "Sign in")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_4___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, "Sign in")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_4___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ActiveLink__WEBPACK_IMPORTED_MODULE_8__["default"], {
     href: "/signup"
   }, "Sign up")))));
 };
@@ -231,6 +234,184 @@ var styles = function styles(theme) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (_material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_6___default()(styles)(Navbar));
+
+/***/ }),
+
+/***/ "./lib/auth.js":
+/*!*********************!*\
+  !*** ./lib/auth.js ***!
+  \*********************/
+/*! exports provided: getUserScript, getSessionFromServer, getSessionFromClient, authInitialProps, signupUser, signinUser, signoutUser */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUserScript", function() { return getUserScript; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSessionFromServer", function() { return getSessionFromServer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSessionFromClient", function() { return getSessionFromClient; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "authInitialProps", function() { return authInitialProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signupUser", function() { return signupUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signinUser", function() { return signinUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signoutUser", function() { return signoutUser; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "@babel/runtime/regenerator");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/router */ "next/router");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
+var WINDOW_USER_SCRIPT_VARIABLE = "__USER__";
+var getUserScript = function getUserScript(user) {
+  return "".concat(WINDOW_USER_SCRIPT_VARIABLE, " = ").concat(JSON.stringify(user), ";");
+};
+var getSessionFromServer = function getSessionFromServer(req) {
+  if (req.user) {
+    return {
+      user: req.user
+    };
+  }
+
+  return {};
+};
+var getSessionFromClient = function getSessionFromClient() {
+  if (typeof window !== "undefined") {
+    var user = window[WINDOW_USER_SCRIPT_VARIABLE] || {};
+    return {
+      user: user
+    };
+  }
+
+  return {
+    user: {}
+  };
+};
+
+var redirectUser = function redirectUser(res, path) {
+  if (res) {
+    res.redirect(302, path);
+    res.finished = true;
+    return {};
+  }
+
+  next_router__WEBPACK_IMPORTED_MODULE_1___default.a.replace(path);
+  return {};
+};
+
+var authInitialProps = function authInitialProps(isProtectedRoute) {
+  return function (_ref) {
+    var req = _ref.req,
+        res = _ref.res,
+        userId = _ref.query.userId;
+    var auth = req ? getSessionFromServer(req) : getSessionFromClient();
+    var currentPath = req ? req.url : window.location.pathname;
+    var user = auth.user;
+    var isAnonymous = !user;
+
+    if (isProtectedRoute && isAnonymous && currentPath !== "/signin") {
+      return redirectUser(res, "/signin");
+    }
+
+    return {
+      auth: auth,
+      userId: userId
+    };
+  };
+};
+var signupUser = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(user) {
+    var _yield$axios$post, data;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/auth/signup', user);
+
+          case 2:
+            _yield$axios$post = _context.sent;
+            data = _yield$axios$post.data;
+            console.log(data);
+            return _context.abrupt("return", data);
+
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function signupUser(_x) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+var signinUser = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(user) {
+    var _yield$axios$post2, data;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/auth/signin", user);
+
+          case 2:
+            _yield$axios$post2 = _context2.sent;
+            data = _yield$axios$post2.data;
+
+            if (typeof window !== "undefined") {
+              window[WINDOW_USER_SCRIPT_VARIABLE] = data || {};
+            }
+
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function signinUser(_x2) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+var signoutUser = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            if (typeof window !== "undefined") {
+              window[WINDOW_USER_SCRIPT_VARIABLE] = {};
+            }
+
+            _context3.next = 3;
+            return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/auth/signout');
+
+          case 3:
+            next_router__WEBPACK_IMPORTED_MODULE_1___default.a.push('/signin');
+
+          case 4:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+
+  return function signoutUser() {
+    return _ref4.apply(this, arguments);
+  };
+}();
 
 /***/ }),
 
@@ -426,6 +607,17 @@ module.exports = __webpack_require__(/*! ./pages/_app.js */"./pages/_app.js");
 
 /***/ }),
 
+/***/ "@babel/runtime/regenerator":
+/*!*********************************************!*\
+  !*** external "@babel/runtime/regenerator" ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("@babel/runtime/regenerator");
+
+/***/ }),
+
 /***/ "@material-ui/core/AppBar":
 /*!*******************************************!*\
   !*** external "@material-ui/core/AppBar" ***!
@@ -566,6 +758,17 @@ module.exports = require("@material-ui/core/styles/withStyles");
 /***/ (function(module, exports) {
 
 module.exports = require("@material-ui/icons/ShareOutlined");
+
+/***/ }),
+
+/***/ "axios":
+/*!************************!*\
+  !*** external "axios" ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("axios");
 
 /***/ }),
 
