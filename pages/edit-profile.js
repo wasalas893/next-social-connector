@@ -16,77 +16,131 @@ import CloudUpload from "@material-ui/icons/CloudUpload";
 import FaceTwoTone from "@material-ui/icons/FaceTwoTone";
 import EditSharp from "@material-ui/icons/EditSharp";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { authInitialProps } from "../lib/auth";
+import Router from "next/router";
 
-import { getAuthUser }from '../lib/api';
+import { authInitialProps } from "../lib/auth";
+import { getAuthUser, updateUser } from "../lib/api";
 
 class EditProfile extends React.Component {
   state = {
-    _id:"",
-    name:"",
-    email:"",
-    about:"",
-    avatar:"",
-    isLoading:true
+    _id: "",
+    name: "",
+    email: "",
+    about: "",
+    avatar: "",
+    avatarPreview: "",
+    openSuccess: false,
+    openError: false,
+    error: "",
+    updatedUser: null,
+    isSaving: false,
+    isLoading: true
   };
 
-  componentDidMount(){
-    const { auth }=this.props;
+  componentDidMount() {
+    const { auth } = this.props;
 
+    this.userData = new FormData();
     getAuthUser(auth.user._id)
-    .then(user=>{
-      this.setState({
-        ...user,
-        isLoading:false
+      .then(user => {
+        this.setState({
+          ...user,
+          isLoading: false
+        });
       })
-    }).catch(err=>{
-      console.log(err)
-      this.setState({ isLoading:false})
-    })
+      .catch(err => {
+        console.error(err);
+        this.setState({ isLoading: false });
+      });
   }
 
+  handleChange = event => {
+    let inputValue;
+
+    if (event.target.name === "avatar") {
+      inputValue = event.target.files[0];
+      this.setState({ avatarPreview: this.createPreviewImage(inputValue) });
+    } else {
+      inputValue = event.target.value;
+    }
+    this.userData.set(event.target.name, inputValue);
+    this.setState({ [event.target.name]: inputValue });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    this.setState({ isSaving: true });
+    updateUser(this.state._id, this.userData)
+      .then(updatedUser => {
+        this.setState({ updatedUser, openSuccess: true }, () => {
+          setTimeout(() => Router.push(`/profile/${this.state._id}`), 6000);
+        });
+      })
+      .catch(this.showError);
+  };
+
+  createPreviewImage = file => URL.createObjectURL(file);
+
+  handleClose = () => this.setState({ openError: false });
+
+  showError = err => {
+    const error = (err.response && err.response.data) || err.message;
+    this.setState({ error, openError: true, isSaving: false });
+  };
+
   render() {
-  const { classes }=this.props;
-  const {name,email,avatar,about,isLoading }=this.state;
+    const { classes } = this.props;
+    const {
+      name,
+      email,
+      avatar,
+      about,
+      avatarPreview,
+      isLoading,
+      isSaving,
+      updatedUser,
+      openSuccess,
+      openError,
+      error
+    } = this.state;
 
-
-    return(
+    return (
       <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <EditSharp/>
-        </Avatar>
-        <Typography variant="h5" component="h1">
-          Edit Profile
-        </Typography>
+        <Paper className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <EditSharp />
+          </Avatar>
+          <Typography variant="h5" component="h1">
+            Edit Profile
+          </Typography>
 
-        <form className={classes.form}>
-          {isLoading ?(
-            <Avatar className={classes.bigAvatar}>
-              <FaceTwoTone/>
-            </Avatar>
-          ):(
-            <Avatar src={avatar} className={classes.bigAvatar}/>
-          )}
-          <input
-            type="file"
-            name="avatar"
-            id="avatar"
-            accept="image/*"
-            onChange={this.handleChange}
-            className={classes.input}
-          />
-          <label htmlFor="avatar" className={classes.uploadButton}>
-            <Button
-            variant="contained"
-            color="secondary"
-            component="span"
-            >
-              Upload Image <CloudUpload />
-            </Button>
-          </label>
-          <span className={classes.filename}>{avatar && avatar.name}</span>
-          <FormControl margin="normal" required fullWidth>
+          {/* Edit Profile Form */}
+          <form onSubmit={this.handleSubmit} className={classes.form}>
+            {isLoading ? (
+              <Avatar className={classes.bigAvatar}>
+                <FaceTwoTone />
+              </Avatar>
+            ) : (
+              <Avatar
+                src={avatarPreview || avatar}
+                className={classes.bigAvatar}
+              />
+            )}
+            <input
+              type="file"
+              name="avatar"
+              id="avatar"
+              accept="image/*"
+              onChange={this.handleChange}
+              className={classes.input}
+            />
+            <label htmlFor="avatar" className={classes.uploadButton}>
+              <Button variant="contained" color="secondary" component="span">
+                Upload Image <CloudUpload />
+              </Button>
+            </label>
+            <span className={classes.filename}>{avatar && avatar.name}</span>
+            <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Name</InputLabel>
               <Input
                 type="text"
@@ -116,19 +170,42 @@ class EditProfile extends React.Component {
             <Button
               type="submit"
               fullWidth
-              disabled={isLoading}
+              disabled={isSaving || isLoading}
               variant="contained"
               color="primary"
               className={classes.submit}
             >
-              Save
+              {isSaving ? "Saving..." : "Save"}
             </Button>
-        </form>
+          </form>
+        </Paper>
 
+        {/* Error Snackbar */}
+        {error && (
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right"
+            }}
+            open={openError}
+            onClose={this.handleClose}
+            autoHideDuration={6000}
+            message={<span className={classes.snack}>{error}</span>}
+          />
+        )}
 
-
-      </Paper>
-
+        {/* Success Dialog */}
+        <Dialog open={openSuccess} disableBackdropClick={true}>
+          <DialogTitle>
+            <VerifiedUserTwoTone className={classes.icon} />
+            Profile Updated
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              User {updatedUser && updatedUser.name} was successfully updated!
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }
@@ -191,6 +268,7 @@ const styles = theme => ({
     display: "none"
   }
 });
-EditProfile.getInitialProps=authInitialProps(true);
+
+EditProfile.getInitialProps = authInitialProps(true);
 
 export default withStyles(styles)(EditProfile);

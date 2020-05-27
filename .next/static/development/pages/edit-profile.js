@@ -4,7 +4,7 @@
 /*!********************!*\
   !*** ./lib/api.js ***!
   \********************/
-/*! exports provided: getUser, followUser, unfollowUser, deleteUser, getAuthUser */
+/*! exports provided: getUser, followUser, unfollowUser, deleteUser, getAuthUser, updateUser */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14,6 +14,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unfollowUser", function() { return unfollowUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteUser", function() { return deleteUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAuthUser", function() { return getAuthUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateUser", function() { return updateUser; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/next/node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
@@ -167,6 +168,34 @@ var getAuthUser = /*#__PURE__*/function () {
 
   return function getAuthUser(_x5) {
     return _ref5.apply(this, arguments);
+  };
+}();
+var updateUser = /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6(authUserId, userData) {
+    var _yield$axios$put3, data;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            _context6.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.put("/api/users/".concat(authUserId), userData);
+
+          case 2:
+            _yield$axios$put3 = _context6.sent;
+            data = _yield$axios$put3.data;
+            return _context6.abrupt("return", data);
+
+          case 5:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6);
+  }));
+
+  return function updateUser(_x6, _x7) {
+    return _ref6.apply(this, arguments);
   };
 }();
 
@@ -33323,8 +33352,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_icons_EditSharp__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_EditSharp__WEBPACK_IMPORTED_MODULE_17__);
 /* harmony import */ var _material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @material-ui/core/styles/withStyles */ "./node_modules/@material-ui/core/styles/withStyles.js");
 /* harmony import */ var _material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_18__);
-/* harmony import */ var _lib_auth__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/auth */ "./lib/auth.js");
-/* harmony import */ var _lib_api__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/api */ "./lib/api.js");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! next/router */ "./node_modules/next/router.js");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_19__);
+/* harmony import */ var _lib_auth__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/auth */ "./lib/auth.js");
+/* harmony import */ var _lib_api__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../lib/api */ "./lib/api.js");
 
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -33374,6 +33405,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
 var EditProfile = /*#__PURE__*/function (_React$Component) {
   _inherits(EditProfile, _React$Component);
 
@@ -33396,7 +33428,70 @@ var EditProfile = /*#__PURE__*/function (_React$Component) {
       email: "",
       about: "",
       avatar: "",
+      avatarPreview: "",
+      openSuccess: false,
+      openError: false,
+      error: "",
+      updatedUser: null,
+      isSaving: false,
       isLoading: true
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleChange", function (event) {
+      var inputValue;
+
+      if (event.target.name === "avatar") {
+        inputValue = event.target.files[0];
+
+        _this.setState({
+          avatarPreview: _this.createPreviewImage(inputValue)
+        });
+      } else {
+        inputValue = event.target.value;
+      }
+
+      _this.userData.set(event.target.name, inputValue);
+
+      _this.setState(_defineProperty({}, event.target.name, inputValue));
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleSubmit", function (event) {
+      event.preventDefault();
+
+      _this.setState({
+        isSaving: true
+      });
+
+      Object(_lib_api__WEBPACK_IMPORTED_MODULE_21__["updateUser"])(_this.state._id, _this.userData).then(function (updatedUser) {
+        _this.setState({
+          updatedUser: updatedUser,
+          openSuccess: true
+        }, function () {
+          setTimeout(function () {
+            return next_router__WEBPACK_IMPORTED_MODULE_19___default.a.push("/profile/".concat(_this.state._id));
+          }, 6000);
+        });
+      }).catch(_this.showError);
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "createPreviewImage", function (file) {
+      return URL.createObjectURL(file);
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleClose", function () {
+      return _this.setState({
+        openError: false
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "showError", function (err) {
+      var error = err.response && err.response.data || err.message;
+
+      _this.setState({
+        error: error,
+        openError: true,
+        isSaving: false
+      });
     });
 
     return _this;
@@ -33408,12 +33503,13 @@ var EditProfile = /*#__PURE__*/function (_React$Component) {
       var _this2 = this;
 
       var auth = this.props.auth;
-      Object(_lib_api__WEBPACK_IMPORTED_MODULE_20__["getAuthUser"])(auth.user._id).then(function (user) {
+      this.userData = new FormData();
+      Object(_lib_api__WEBPACK_IMPORTED_MODULE_21__["getAuthUser"])(auth.user._id).then(function (user) {
         _this2.setState(_objectSpread({}, user, {
           isLoading: false
         }));
       }).catch(function (err) {
-        console.log(err);
+        console.error(err);
 
         _this2.setState({
           isLoading: false
@@ -33429,7 +33525,13 @@ var EditProfile = /*#__PURE__*/function (_React$Component) {
           email = _this$state.email,
           avatar = _this$state.avatar,
           about = _this$state.about,
-          isLoading = _this$state.isLoading;
+          avatarPreview = _this$state.avatarPreview,
+          isLoading = _this$state.isLoading,
+          isSaving = _this$state.isSaving,
+          updatedUser = _this$state.updatedUser,
+          openSuccess = _this$state.openSuccess,
+          openError = _this$state.openError,
+          error = _this$state.error;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: classes.root
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -33440,11 +33542,12 @@ var EditProfile = /*#__PURE__*/function (_React$Component) {
         variant: "h5",
         component: "h1"
       }, "Edit Profile"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        onSubmit: this.handleSubmit,
         className: classes.form
       }, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Avatar__WEBPACK_IMPORTED_MODULE_1___default.a, {
         className: classes.bigAvatar
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_FaceTwoTone__WEBPACK_IMPORTED_MODULE_16___default.a, null)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Avatar__WEBPACK_IMPORTED_MODULE_1___default.a, {
-        src: avatar,
+        src: avatarPreview || avatar,
         className: classes.bigAvatar
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "file",
@@ -33497,11 +33600,27 @@ var EditProfile = /*#__PURE__*/function (_React$Component) {
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_14___default.a, {
         type: "submit",
         fullWidth: true,
-        disabled: isLoading,
+        disabled: isSaving || isLoading,
         variant: "contained",
         color: "primary",
         className: classes.submit
-      }, "Save"))));
+      }, isSaving ? "Saving..." : "Save"))), error && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_6___default.a, {
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right"
+        },
+        open: openError,
+        onClose: this.handleClose,
+        autoHideDuration: 6000,
+        message: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: classes.snack
+        }, error)
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Dialog__WEBPACK_IMPORTED_MODULE_7___default.a, {
+        open: openSuccess,
+        disableBackdropClick: true
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_DialogTitle__WEBPACK_IMPORTED_MODULE_11___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_VerifiedUserTwoTone__WEBPACK_IMPORTED_MODULE_12___default.a, {
+        className: classes.icon
+      }), "Profile Updated"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_DialogContent__WEBPACK_IMPORTED_MODULE_9___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_DialogContentText__WEBPACK_IMPORTED_MODULE_10___default.a, null, "User ", updatedUser && updatedUser.name, " was successfully updated!"))));
     }
   }]);
 
@@ -33567,7 +33686,7 @@ var styles = function styles(theme) {
   };
 };
 
-EditProfile.getInitialProps = Object(_lib_auth__WEBPACK_IMPORTED_MODULE_19__["authInitialProps"])(true);
+EditProfile.getInitialProps = Object(_lib_auth__WEBPACK_IMPORTED_MODULE_20__["authInitialProps"])(true);
 /* harmony default export */ __webpack_exports__["default"] = (_material_ui_core_styles_withStyles__WEBPACK_IMPORTED_MODULE_18___default()(styles)(EditProfile));
     (function (Component, route) {
       if(!Component) return
@@ -33591,7 +33710,7 @@ EditProfile.getInitialProps = Object(_lib_auth__WEBPACK_IMPORTED_MODULE_19__["au
 
 /***/ }),
 
-/***/ 5:
+/***/ 7:
 /*!*************************************!*\
   !*** multi ./pages/edit-profile.js ***!
   \*************************************/
@@ -33616,5 +33735,5 @@ module.exports = dll_9600c7f2fd90f30a9096;
 
 /***/ })
 
-},[[5,"static/runtime/webpack.js"]]]));;
+},[[7,"static/runtime/webpack.js"]]]));;
 //# sourceMappingURL=edit-profile.js.map

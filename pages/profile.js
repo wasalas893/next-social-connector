@@ -116,7 +116,7 @@ class Profile extends React.Component {
             <Divider/>
             <ListItem>
               <ListItemText 
-                primary={user.name}
+                primary={user.about}
                 secondary={`Joined:${user.createdAt}`}
               />
             </ListItem>

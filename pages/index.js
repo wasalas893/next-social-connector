@@ -5,21 +5,41 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { authInitialProps } from "../lib/auth";
+import Router from 'next/router';
 
+const Index=({ classes,auth})=>(
+  <main className={classes.root}>
+    {auth.user && auth.user._id ?(
+      <div>Auth User Page</div>
+    ):(
+      <Grid
+      justify="center"
+      alignItems="center"
+      direction="row"
+      container
+      className={classes.heroContent}
+      
+      >
+      <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+        A Better Social Network
+      </Typography>
+      <Typography variant="h6" align="center" color="textSecondary" component="p">
+              Lorem ispum, dolor sit amet consectetur addijndsn elit.
+              nesciunt suscript voluptes harum
+      </Typography>
+      <Button
+      className={classes.fabButton}
+      variant="extendedFab"
+      color="primary"
+      onClick={()=>Router.push('/signup')}>
+        Get Started
+      </Button>
 
-class Index extends React.Component {
-  state = {};
+      </Grid>
+    )}
+  </main>
 
-  render() {
-    return <div>
-    <p>index</p>
-  
-    
-        
-    </div>;
-  }
-}
-
+)
 const styles = theme => ({
   root: {
     paddingTop: theme.spacing.unit * 10,
