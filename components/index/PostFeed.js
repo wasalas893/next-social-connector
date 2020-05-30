@@ -21,7 +21,15 @@ class PostFeed extends React.Component {
     return (
       <div className={classes.root}>
         <Typography variant="h4" component="h1" align="center"
-        color="primary" clas></Typography>
+        color="primary" className={classes.title}>
+          Post Feed
+        </Typography>
+        <NewPost
+          auth={auth}
+          text={text}
+          image={image}
+          handleChange={this.handleChange}
+        />
       </div>
     );
   }
