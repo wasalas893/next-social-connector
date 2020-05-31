@@ -15,7 +15,9 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 import Link from 'next/link';
 
-class Post extends React.Component {
+import Comments from './Comments';
+
+class Post extends React.PureComponent {
   state = {
     isLiked:false,
     numLikes:0,
@@ -28,7 +30,9 @@ class Post extends React.Component {
     })
   };
   componentDidUpdate(prevProps){
+    console.log({ prevProps },{props:this.props});
     if(prevProps.post.likes.length !== this.props.post.likes.length){
+      console.log("UPDATING!",{prevProps},{props:this.props});
       this.setState({
         isLiked:this.checkLiked(this.props.post.likes),
         numLikes:this.props.post.likes.length
@@ -97,6 +101,11 @@ class Post extends React.Component {
       </CardActions>
       <Divider />
       {/*comment area */}
+      <Comments
+        auth={auth}
+        postId={post._id}
+        comments={comments}
+      />
       </Card>
     );
   }

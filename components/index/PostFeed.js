@@ -97,6 +97,10 @@ class PostFeed extends React.Component {
        this.setState({ posts: updatedPosts })
      }).catch(err=>console.error(err))
     };
+    handleAddComment=(postId,text)=>{
+      const comment={text};
+      this.handleAddComment(postId,comment)
+    }
 
   render() {
 
