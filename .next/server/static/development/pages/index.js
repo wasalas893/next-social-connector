@@ -198,7 +198,8 @@ var Comments = /*#__PURE__*/function (_React$Component) {
       var _this$props2 = _this.props,
           postId = _this$props2.postId,
           auth = _this$props2.auth,
-          classes = _this$props2.classes;
+          classes = _this$props2.classes,
+          handleDeleteComment = _this$props2.handleDeleteComment;
       var isCommentCreator = comment.postedBy._id === auth.user._id;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_8___default.a, {
         href: "/profile/".concat(comment.postedBy._id)
@@ -206,7 +207,10 @@ var Comments = /*#__PURE__*/function (_React$Component) {
         className: classes.commentDate
       }, comment.createdAt, isCommentCreator && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Delete__WEBPACK_IMPORTED_MODULE_6___default.a, {
         color: "secondary",
-        className: classes.commentDelete
+        className: classes.commentDelete,
+        onClick: function onClick() {
+          return handleDeleteComment(postId, comment);
+        }
       })));
     });
 
@@ -579,7 +583,8 @@ var Post = /*#__PURE__*/function (_React$PureComponent) {
           isDeletingPost = _this$props.isDeletingPost,
           handleToggleLike = _this$props.handleToggleLike,
           handleDeletePost = _this$props.handleDeletePost,
-          handleAddComment = _this$props.handleAddComment;
+          handleAddComment = _this$props.handleAddComment,
+          handleDeleteComment = _this$props.handleDeleteComment;
       var _this$state = this.state,
           isLiked = _this$state.isLiked,
           numLikes = _this$state.numLikes,
@@ -637,7 +642,8 @@ var Post = /*#__PURE__*/function (_React$PureComponent) {
         auth: auth,
         postId: post._id,
         comments: comments,
-        handleAddComment: handleAddComment
+        handleAddComment: handleAddComment,
+        handleDeleteComment: handleDeleteComment
       }));
     }
   }]);
@@ -877,6 +883,22 @@ var PostFeed = /*#__PURE__*/function (_React$Component) {
       });
     });
 
+    _defineProperty(_assertThisInitialized(_this), "handleDeleteComment", function (postId, comment) {
+      Object(_lib_api__WEBPACK_IMPORTED_MODULE_5__["deleteComment"])(postId, comment).then(function (postData) {
+        var postIndex = _this.state.posts.findIndex(function (post) {
+          return post._id === postData._id;
+        });
+
+        var updatedPosts = [].concat(_toConsumableArray(_this.state.posts.slice(0, postIndex)), [postData], _toConsumableArray(_this.state.posts.splice(postIndex + 1)));
+
+        _this.setState({
+          posts: updatedPosts
+        });
+      }).catch(function (err) {
+        return console.error(err);
+      });
+    });
+
     return _this;
   }
 
@@ -923,7 +945,8 @@ var PostFeed = /*#__PURE__*/function (_React$Component) {
           isDeletingPost: isDeletingPost,
           handleDeletePost: _this2.handleDeletePost,
           handleToggleLike: _this2.handleToggleLike,
-          handleAddComment: _this2.handleAddComment
+          handleAddComment: _this2.handleAddComment,
+          handleDeleteComment: _this2.handleDeleteComment
         });
       }));
     }
@@ -1181,7 +1204,7 @@ var styles = function styles(theme) {
 /*!********************!*\
   !*** ./lib/api.js ***!
   \********************/
-/*! exports provided: getUser, followUser, unfollowUser, deleteUser, getAuthUser, updateUser, getUserFeed, addPost, getPostFeed, deletePost, likePost, unlikePost, addComment */
+/*! exports provided: getUser, followUser, unfollowUser, deleteUser, getAuthUser, updateUser, getUserFeed, addPost, getPostFeed, deletePost, likePost, unlikePost, addComment, deleteComment */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1199,6 +1222,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "likePost", function() { return likePost; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unlikePost", function() { return unlikePost; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addComment", function() { return addComment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteComment", function() { return deleteComment; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "@babel/runtime/regenerator");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "axios");
@@ -1583,6 +1607,37 @@ var addComment = /*#__PURE__*/function () {
 
   return function addComment(_x15, _x16) {
     return _ref13.apply(this, arguments);
+  };
+}();
+var deleteComment = /*#__PURE__*/function () {
+  var _ref14 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee14(postId, comment) {
+    var _yield$axios$put7, data;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee14$(_context14) {
+      while (1) {
+        switch (_context14.prev = _context14.next) {
+          case 0:
+            _context14.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.put('/api/posts/uncomment', {
+              postId: postId,
+              comment: comment
+            });
+
+          case 2:
+            _yield$axios$put7 = _context14.sent;
+            data = _yield$axios$put7.data;
+            return _context14.abrupt("return", data);
+
+          case 5:
+          case "end":
+            return _context14.stop();
+        }
+      }
+    }, _callee14);
+  }));
+
+  return function deleteComment(_x17, _x18) {
+    return _ref14.apply(this, arguments);
   };
 }();
 
