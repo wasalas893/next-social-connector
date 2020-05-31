@@ -206,6 +206,7 @@ class Profile extends React.Component {
            
             auth={auth}
             posts={posts}
+            user={user}
             isDeletingPost={isDeletingPost}
             handleDeletePost={this.handleDeletePost}
             handleToggleLike={this.handleToggleLike}
