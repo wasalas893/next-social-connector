@@ -237,7 +237,9 @@ var Post = /*#__PURE__*/function (_React$Component) {
       var _this$props = this.props,
           classes = _this$props.classes,
           post = _this$props.post,
-          auth = _this$props.auth;
+          auth = _this$props.auth,
+          isDeletingPost = _this$props.isDeletingPost,
+          handleDeletePost = _this$props.handleDeletePost;
       var isPostCreator = post.postedBy._id === auth.user._id;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_2___default.a, {
         className: classes.card
@@ -245,7 +247,12 @@ var Post = /*#__PURE__*/function (_React$Component) {
         avatar: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Avatar__WEBPACK_IMPORTED_MODULE_9___default.a, {
           src: post.postedBy.avatar
         }),
-        action: isPostCreator && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_7___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_DeleteTwoTone__WEBPACK_IMPORTED_MODULE_11___default.a, {
+        action: isPostCreator && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_7___default.a, {
+          disabled: isDeletingPost,
+          onClick: function onClick() {
+            return handleDeletePost(post);
+          }
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_DeleteTwoTone__WEBPACK_IMPORTED_MODULE_11___default.a, {
           color: "secondary"
         })),
         title: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_15___default.a, {
@@ -399,7 +406,8 @@ var PostFeed = /*#__PURE__*/function (_React$Component) {
       posts: [],
       text: "",
       image: "",
-      isAddingPost: false
+      isAddingPost: false,
+      isDeletingPost: false
     });
 
     _defineProperty(_assertThisInitialized(_this), "getPosts", function () {
@@ -452,6 +460,31 @@ var PostFeed = /*#__PURE__*/function (_React$Component) {
       });
     });
 
+    _defineProperty(_assertThisInitialized(_this), "handleDeletePost", function (deletedPost) {
+      _this.setState({
+        isDeletingPost: true
+      });
+
+      Object(_lib_api__WEBPACK_IMPORTED_MODULE_5__["deletePost"])(deletedPost._id).then(function (postData) {
+        var postIndex = _this.state.posts.findIndex(function (post) {
+          return post._id == postData._id;
+        });
+
+        var updatePosts = [].concat(_toConsumableArray(_this.state.posts.slice(0, postIndex)), _toConsumableArray(_this.state.posts.splice(postIndex + 1)));
+
+        _this.setState({
+          posts: updatePosts,
+          isDeletingPost: false
+        });
+      }).catch(function (err) {
+        console.error(err);
+
+        _this.setState({
+          isDeletingPost: false
+        });
+      });
+    });
+
     return _this;
   }
 
@@ -464,6 +497,8 @@ var PostFeed = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       var _this$props = this.props,
           classes = _this$props.classes,
           auth = _this$props.auth;
@@ -471,7 +506,8 @@ var PostFeed = /*#__PURE__*/function (_React$Component) {
           posts = _this$state.posts,
           text = _this$state.text,
           image = _this$state.image,
-          isAddingPost = _this$state.isAddingPost;
+          isAddingPost = _this$state.isAddingPost,
+          isDeletingPost = _this$state.isDeletingPost;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: classes.root
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_1___default.a, {
@@ -491,7 +527,9 @@ var PostFeed = /*#__PURE__*/function (_React$Component) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Post__WEBPACK_IMPORTED_MODULE_4__["default"], {
           key: post._id,
           auth: auth,
-          post: post
+          post: post,
+          isDeletingPost: isDeletingPost,
+          handleDeletePost: _this2.handleDeletePost
         });
       }));
     }
@@ -749,7 +787,7 @@ var styles = function styles(theme) {
 /*!********************!*\
   !*** ./lib/api.js ***!
   \********************/
-/*! exports provided: getUser, followUser, unfollowUser, deleteUser, getAuthUser, updateUser, getUserFeed, addPost, getPostFeed */
+/*! exports provided: getUser, followUser, unfollowUser, deleteUser, getAuthUser, updateUser, getUserFeed, addPost, getPostFeed, deletePost */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -763,6 +801,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUserFeed", function() { return getUserFeed; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addPost", function() { return addPost; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPostFeed", function() { return getPostFeed; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deletePost", function() { return deletePost; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/next/node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
@@ -1028,6 +1067,34 @@ var getPostFeed = /*#__PURE__*/function () {
 
   return function getPostFeed(_x11) {
     return _ref9.apply(this, arguments);
+  };
+}();
+var deletePost = /*#__PURE__*/function () {
+  var _ref10 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee10(postId) {
+    var _yield$axios$delete2, data;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee10$(_context10) {
+      while (1) {
+        switch (_context10.prev = _context10.next) {
+          case 0:
+            _context10.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.delete("/api/posts/".concat(postId));
+
+          case 2:
+            _yield$axios$delete2 = _context10.sent;
+            data = _yield$axios$delete2.data;
+            return _context10.abrupt("return", data);
+
+          case 5:
+          case "end":
+            return _context10.stop();
+        }
+      }
+    }, _callee10);
+  }));
+
+  return function deletePost(_x12) {
+    return _ref10.apply(this, arguments);
   };
 }();
 
