@@ -319,12 +319,38 @@ var Post = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call.apply(_super, [this].concat(args));
 
-    _defineProperty(_assertThisInitialized(_this), "state", {});
+    _defineProperty(_assertThisInitialized(_this), "state", {
+      isLiked: false,
+      numLikes: 0,
+      comments: []
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "checkLiked", function (likes) {
+      return likes.includes(_this.props.auth.user._id);
+    });
 
     return _this;
   }
 
   _createClass(Post, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.setState({
+        isLiked: this.checkLiked(this.props.post.likes),
+        numLikes: this.props.post.likes.length
+      });
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      if (prevProps.post.likes.length !== this.props.post.likes.length) {
+        this.setState({
+          isLiked: this.checkLiked(this.props.post.likes),
+          numLikes: this.props.post.likes.length
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this$props = this.props,
@@ -332,7 +358,12 @@ var Post = /*#__PURE__*/function (_React$Component) {
           post = _this$props.post,
           auth = _this$props.auth,
           isDeletingPost = _this$props.isDeletingPost,
+          handleToggleLike = _this$props.handleToggleLike,
           handleDeletePost = _this$props.handleDeletePost;
+      var _this$state = this.state,
+          isLiked = _this$state.isLiked,
+          numLikes = _this$state.numLikes,
+          comments = _this$state.comments;
       var isPostCreator = post.postedBy._id === auth.user._id;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_2___default.a, {
         className: classes.card
@@ -364,16 +395,21 @@ var Post = /*#__PURE__*/function (_React$Component) {
         className: classes.image,
         src: post.image
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_CardActions__WEBPACK_IMPORTED_MODULE_5___default.a, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_7___default.a, {
+        onClick: function onClick() {
+          return handleToggleLike(post);
+        },
         className: classes.button
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Badge__WEBPACK_IMPORTED_MODULE_1___default.a, {
-        badgeContent: 0,
+        badgeContent: numLikes,
         color: "secondary"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_FavoriteBorder__WEBPACK_IMPORTED_MODULE_13___default.a, {
+      }, isLiked ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Favorite__WEBPACK_IMPORTED_MODULE_12___default.a, {
+        className: classes.favoriteIcon
+      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_FavoriteBorder__WEBPACK_IMPORTED_MODULE_13___default.a, {
         className: classes.favoriteIcon
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_7___default.a, {
         className: classes.button
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Badge__WEBPACK_IMPORTED_MODULE_1___default.a, {
-        badgeContent: 0,
+        badgeContent: comments.length,
         color: "primary"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Comment__WEBPACK_IMPORTED_MODULE_10___default.a, {
         className: classes.commentIcon
@@ -578,6 +614,25 @@ var PostFeed = /*#__PURE__*/function (_React$Component) {
       });
     });
 
+    _defineProperty(_assertThisInitialized(_this), "handleToggleLike", function (post) {
+      var auth = _this.props.auth;
+      var isPostLiked = post.likes.includes(auth.user._id);
+      var sendRequest = isPostLiked ? _lib_api__WEBPACK_IMPORTED_MODULE_5__["unlikePost"] : _lib_api__WEBPACK_IMPORTED_MODULE_5__["likePost"];
+      sendRequest(post._id).then(function (postData) {
+        var postIndex = _this.state.posts.findIndex(function (post) {
+          return post._id === postData._id;
+        });
+
+        var updatedPosts = [].concat(_toConsumableArray(_this.state.posts.slice(0, postIndex)), [postData], _toConsumableArray(_this.state.posts.splice(postIndex + 1)));
+
+        _this.setState({
+          posts: updatedPosts
+        });
+      }).catch(function (err) {
+        return console.error(err);
+      });
+    });
+
     return _this;
   }
 
@@ -622,7 +677,8 @@ var PostFeed = /*#__PURE__*/function (_React$Component) {
           auth: auth,
           post: post,
           isDeletingPost: isDeletingPost,
-          handleDeletePost: _this2.handleDeletePost
+          handleDeletePost: _this2.handleDeletePost,
+          handleToggleLike: _this2.handleToggleLike
         });
       }));
     }
@@ -880,7 +936,7 @@ var styles = function styles(theme) {
 /*!********************!*\
   !*** ./lib/api.js ***!
   \********************/
-/*! exports provided: getUser, followUser, unfollowUser, deleteUser, getAuthUser, updateUser, getUserFeed, addPost, getPostFeed, deletePost */
+/*! exports provided: getUser, followUser, unfollowUser, deleteUser, getAuthUser, updateUser, getUserFeed, addPost, getPostFeed, deletePost, likePost, unlikePost */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -895,6 +951,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addPost", function() { return addPost; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPostFeed", function() { return getPostFeed; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deletePost", function() { return deletePost; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "likePost", function() { return likePost; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unlikePost", function() { return unlikePost; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "@babel/runtime/regenerator");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "axios");
@@ -1188,6 +1246,66 @@ var deletePost = /*#__PURE__*/function () {
 
   return function deletePost(_x12) {
     return _ref10.apply(this, arguments);
+  };
+}();
+var likePost = /*#__PURE__*/function () {
+  var _ref11 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee11(postId) {
+    var _yield$axios$put4, data;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee11$(_context11) {
+      while (1) {
+        switch (_context11.prev = _context11.next) {
+          case 0:
+            _context11.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.put("/api/posts/like", {
+              postId: postId
+            });
+
+          case 2:
+            _yield$axios$put4 = _context11.sent;
+            data = _yield$axios$put4.data;
+            return _context11.abrupt("return", data);
+
+          case 5:
+          case "end":
+            return _context11.stop();
+        }
+      }
+    }, _callee11);
+  }));
+
+  return function likePost(_x13) {
+    return _ref11.apply(this, arguments);
+  };
+}();
+var unlikePost = /*#__PURE__*/function () {
+  var _ref12 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee12(postId) {
+    var _yield$axios$put5, data;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee12$(_context12) {
+      while (1) {
+        switch (_context12.prev = _context12.next) {
+          case 0:
+            _context12.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.put("/api/posts/unlike", {
+              postId: postId
+            });
+
+          case 2:
+            _yield$axios$put5 = _context12.sent;
+            data = _yield$axios$put5.data;
+            return _context12.abrupt("return", data);
+
+          case 5:
+          case "end":
+            return _context12.stop();
+        }
+      }
+    }, _callee12);
+  }));
+
+  return function unlikePost(_x14) {
+    return _ref12.apply(this, arguments);
   };
 }();
 
