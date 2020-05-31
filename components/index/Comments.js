@@ -17,7 +17,7 @@ class Comments extends React.Component {
   handleSubmit=event=>{
     const { text }=this.state;
 
-    const { postId }=this.props;
+    const { postId,handleAddComment }=this.props;
     event.preventDefault();
     handleAddComment(postId,text)
     this.setState({ text: ""});
@@ -34,6 +34,7 @@ class Comments extends React.Component {
           <a>{comment.postedBy.name}</a>
         </Link>
         <br/>
+        {comment.text}
         <span className={classes.commentDate}>
           {comment.createdAt}
           {isCommentCreator &&(
