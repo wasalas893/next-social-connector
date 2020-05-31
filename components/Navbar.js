@@ -24,7 +24,7 @@ const Navbar = ({ classes, router, pageProps: { auth } }) => {
     <ShareOutlined className={classes.icon}/>
     </ActiveLink>
     <Typography variant="h5" component="h1" className={classes.toolbarTitle}>
-    <ActiveLink href="/">NextConnect</ActiveLink>
+    <ActiveLink href="/">NextDev</ActiveLink>
     
 
     </Typography>

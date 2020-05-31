@@ -13,9 +13,10 @@ import Edit from "@material-ui/icons/Edit";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import { authInitialProps } from "../lib/auth";
-import { getUser } from '../lib/api';
+import { getUser,getPostsByUser,deletePost,likePost,unlikePost,addComment,deleteComment } from '../lib/api';
 
 import Link from 'next/link';
+import ProfileTabs from '../components/profile/ProfileTabs';
 
 import FollowUser from '../components/profile/FollowUser';
 import DeleteUser from '../components/profile/DeleteUser';
@@ -23,21 +24,26 @@ import DeleteUser from '../components/profile/DeleteUser';
 class Profile extends React.Component {
   state = {
     user:null,
+    posts:[],
     isAuth:false,
     isFollowing:false,
-    isLoading:true
+    isLoading:true,
+    isDeletingPost:false
   };
 
   componentDidMount(){
     const { userId,auth }=this.props;
 
-    const isAuth=auth.user._id===userId;
+   
 
-    getUser(userId).then(user=>{
-      const isFollowing=this.checkFollow(auth,user)
+    getUser(userId).then(async user=>{
+      const isAuth=auth.user._id===userId;
+      const isFollowing=this.checkFollow(auth,user);
+      const posts=await getPostsByUser(userId)
       this.setState({
            user,
            isAuth,
+           posts,
            isFollowing,
            isLoading:false
       })
@@ -56,10 +62,85 @@ class Profile extends React.Component {
 
 
   }
+  handleDeletePost=deletedPost=>{
+    this.setState({ isDeletingPost:true })
+
+    deletePost(deletedPost._id)
+     .then(postData=>{
+       const postIndex=this.state.posts.findIndex(post=>post._id==postData._id)
+       const updatePosts=[
+        ...this.state.posts.slice(0,postIndex),
+        ...this.state.posts.splice(postIndex + 1)
+       ]
+       this.setState({
+         posts:updatePosts,
+         isDeletingPost:false
+       })
+     }).catch(err=>{
+       console.error(err);
+       this.setState({ isDeletingPost:false })
+     })
+
+  };
+
+
+  handleToggleLike= post =>{
+   const { auth }=this.props;
+
+   const isPostLiked=post.likes.includes(auth.user._id)
+   const sendRequest=isPostLiked ? unlikePost : likePost;
+   sendRequest(post._id)
+   .then(postData=>{
+     const postIndex=this.state.posts.findIndex(
+      post=>post._id===postData._id
+     )
+     const updatedPosts=[
+      ...this.state.posts.slice(0,postIndex),
+      postData,
+      ...this.state.posts.splice(postIndex + 1)
+     ]
+     this.setState({ posts: updatedPosts })
+   }).catch(err=>console.error(err))
+  };
+
+  handleAddComment=(postId,text)=>{
+
+    const comment={text};
+
+    addComment(postId,comment)
+
+    .then(postData=>{
+      const postIndex=this.state.posts.findIndex(
+        post=>post._id===postData._id
+      )
+      const updatedPosts=[
+        ...this.state.posts.slice(0,postIndex),
+      postData,
+      ...this.state.posts.splice(postIndex + 1)
+      ]
+      this.setState({ posts:updatedPosts })
+    }).catch(err=>console.error(err))
+  }
+
+  handleDeleteComment=(postId,comment)=>{
+    deleteComment(postId,comment)
+    .then(postData=>{
+      const postIndex=this.state.posts.findIndex(
+        post=>post._id===postData._id
+      );
+      const updatedPosts=[
+        ...this.state.posts.slice(0,postIndex),
+        postData,
+        ...this.state.posts.splice(postIndex + 1)
+      ]
+      this.setState({ posts:updatedPosts })
+    }).catch(err=>console.error(err))
+  }
+
 
   render() {
-    const {classes}=this.props;
-    const { isLoading,user,isAuth,isFollowing }=this.state;
+    const {classes,auth}=this.props;
+    const { isLoading,posts,user,isAuth,isFollowing,isDeletingPost }=this.state;
     
     return (
       <Paper className={classes.root} elevation={4}>
@@ -120,6 +201,17 @@ class Profile extends React.Component {
                 secondary={`Joined:${user.createdAt}`}
               />
             </ListItem>
+            {/*display users posts,following, and followers*/}
+            <ProfileTabs
+           
+            auth={auth}
+            posts={posts}
+            isDeletingPost={isDeletingPost}
+            handleDeletePost={this.handleDeletePost}
+            handleToggleLike={this.handleToggleLike}
+            handleAddComment={this. handleAddComment}
+            handleDeleteComment={this. handleDeleteComment}
+          />
           </List>
         ) }
       </Paper>

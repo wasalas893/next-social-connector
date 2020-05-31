@@ -1204,7 +1204,7 @@ var styles = function styles(theme) {
 /*!********************!*\
   !*** ./lib/api.js ***!
   \********************/
-/*! exports provided: getUser, followUser, unfollowUser, deleteUser, getAuthUser, updateUser, getUserFeed, addPost, getPostFeed, deletePost, likePost, unlikePost, addComment, deleteComment */
+/*! exports provided: getUser, followUser, unfollowUser, deleteUser, getAuthUser, updateUser, getUserFeed, addPost, getPostFeed, deletePost, likePost, unlikePost, addComment, deleteComment, getPostsByUser */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1223,6 +1223,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unlikePost", function() { return unlikePost; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addComment", function() { return addComment; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteComment", function() { return deleteComment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPostsByUser", function() { return getPostsByUser; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "@babel/runtime/regenerator");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "axios");
@@ -1638,6 +1639,34 @@ var deleteComment = /*#__PURE__*/function () {
 
   return function deleteComment(_x17, _x18) {
     return _ref14.apply(this, arguments);
+  };
+}();
+var getPostsByUser = /*#__PURE__*/function () {
+  var _ref15 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee15(userId) {
+    var _yield$axios$get5, data;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee15$(_context15) {
+      while (1) {
+        switch (_context15.prev = _context15.next) {
+          case 0:
+            _context15.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/posts/by/".concat(userId));
+
+          case 2:
+            _yield$axios$get5 = _context15.sent;
+            data = _yield$axios$get5.data;
+            return _context15.abrupt("return", data);
+
+          case 5:
+          case "end":
+            return _context15.stop();
+        }
+      }
+    }, _callee15);
+  }));
+
+  return function getPostsByUser(_x19) {
+    return _ref15.apply(this, arguments);
   };
 }();
 
