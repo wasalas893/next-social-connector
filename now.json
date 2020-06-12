@@ -1,5 +1,5 @@
 {
-    "name":"next-social-connector",
-    "alias":"next-social-connector.now.sh",
+    "name":"next-connect",
+    "alias":"next-connect.now.sh",
     "dotenv":true
 }
