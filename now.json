@@ -1,0 +1,5 @@
+{
+    "name": "next-social-connector",
+    "alias":"next-social-connector",
+    "dotenv":true
+}
